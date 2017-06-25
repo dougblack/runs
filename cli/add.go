@@ -4,8 +4,10 @@ import (
     "context"
     "flag"
     "fmt"
-    "strconv"
     "github.com/google/subcommands"
+    "github.com/dougblack/runs/data"
+    "strconv"
+    "time"
 )
 
 type AddCommand struct {
@@ -34,7 +36,9 @@ func (r *AddCommand) Execute(_ context.Context, f *flag.FlagSet, _ ... interface
         fmt.Printf("Failed to convert %s to 32-bit float\n", f.Arg(0))
         return subcommands.ExitUsageError
     }
-    fmt.Printf("Adding %.2f\n", miles)
+    now := time.Now().UTC()
+    data.AddRun(miles, now)
+    fmt.Printf("Added %.2f miles on %s\n", miles, now.Format("1/2"))
     return subcommands.ExitSuccess
 }
 
