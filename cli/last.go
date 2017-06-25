@@ -30,6 +30,6 @@ func (l *LastCommand) Execute(_ context.Context, f *flag.FlagSet, _ ... interfac
         return subcommands.ExitUsageError
     }
     miles, date := data.LastRun()
-    fmt.Printf("%.2f miles @ %s\n", miles, date.Format("1/2"))
+    fmt.Printf("%s: %.2f miles\n", date.Format("1/2"), miles)
     return subcommands.ExitSuccess
 }

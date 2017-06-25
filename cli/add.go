@@ -38,7 +38,7 @@ func (a *AddCommand) Execute(_ context.Context, f *flag.FlagSet, _ ... interface
     }
     now := time.Now().UTC()
     data.AddRun(miles, now)
-    fmt.Printf("Added %.2f miles on %s\n", miles, now.Format("1/2"))
+    fmt.Printf("%s: %.2f miles\n", now.Format("1/2"), miles)
     return subcommands.ExitSuccess
 }
 
