@@ -35,8 +35,6 @@ func total(now time.Time, date time.Time, runs []data.Run) float64 {
 		sameDay := (date.Day() == runDate.Day())
 		if sameYear && sameMonth && sameDay {
 			total += run.Miles
-		} else {
-			break
 		}
 	}
 	return total
@@ -71,18 +69,18 @@ func printRuns(runs []data.Run) {
 		if dayTotal > 0 {
 			fmt.Printf("%2d", int(dayTotal))
 		} else {
-			fmt.Printf("  ")
+			fmt.Printf("--")
 		}
 		fmt.Print(" ")
 		if date.Weekday() == time.Saturday {
-			fmt.Printf(" %3.1f\n", weekTotal)
+			fmt.Printf("%3.1f\n", weekTotal)
 			weekTotal = 0.0
 		}
 	}
 
 	for i := int(last.Weekday()); i <= int(time.Sunday); i++ {
 		date := time.Date(now.Year(), now.Month() + 1, i, 0, 0, 0, 0, now.Location())
-		fmt.Printf("  ")
+		fmt.Printf("--")
 		fmt.Print(" ")
 		if date.Weekday() == time.Saturday {
 			fmt.Printf(" %3.1f\n", weekTotal)

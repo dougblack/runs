@@ -27,8 +27,8 @@ func (a *AddCommand) SetFlags(f *flag.FlagSet) {
 }
 
 func (a *AddCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
-	if f.NArg() != 1 {
-		fmt.Printf("Received too many arguments for `add`: %s\n", f.Args())
+	if f.NArg() <= 0 {
+		fmt.Printf("Received incorrect number of arguments for `add`: %s\n", f.Args())
 		return subcommands.ExitUsageError
 	}
 	miles, err := strconv.ParseFloat(f.Arg(0), 32)
@@ -36,8 +36,15 @@ func (a *AddCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{
 		fmt.Printf("Failed to convert %s to 32-bit float\n", f.Arg(0))
 		return subcommands.ExitUsageError
 	}
-	now := time.Now().UTC()
-	data.AddRun(miles, now)
-	fmt.Printf("%s: %.2f miles\n", now.Format("1/2"), miles)
+	date := time.Now().UTC()
+	if f.NArg() == 2 {
+		date, err = time.Parse("1/2", f.Arg(1))
+		date = time.Date(time.Now().UTC().Year(), date.Month(), date.Day(), 0, 0, 0, 0, date.Location())
+		if err != nil {
+			panic(err)
+		}
+	}
+	data.AddRun(miles, date)
+	fmt.Printf("%s: %.2f miles\n", date.Format("1/2/2006"), miles)
 	return subcommands.ExitSuccess
 }
