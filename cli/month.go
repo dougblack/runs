@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/dougblack/runs/data"
+	"github.com/fatih/color"
 	"github.com/google/subcommands"
 	"strings"
 	"time"
@@ -30,10 +31,7 @@ func total(now time.Time, date time.Time, runs []data.Run) float64 {
 	total := 0.0
 	for _, run := range runs {
 		runDate := run.Date.In(now.Location())
-		sameYear := (date.Year() == runDate.Year())
-		sameMonth := (date.Month() == runDate.Month())
-		sameDay := (date.Day() == runDate.Day())
-		if sameYear && sameMonth && sameDay {
+		if date.Year() == runDate.Year() && date.YearDay() == runDate.YearDay() {
 			total += run.Miles
 		}
 	}
@@ -45,8 +43,20 @@ func header(now time.Time) {
 	headerMonth := fmt.Sprintf("%s %d", now.Month().String(), now.Year())
 	leftPadding := (headerWidth - len(headerMonth)) / 2
 	padding := strings.Repeat(" ", leftPadding)
-	fmt.Printf("%s%s\n", padding, headerMonth)
+	headerHighlight := color.New(color.FgBlue).Add(color.Bold).SprintFunc()
+	fmt.Printf("%s%s\n", padding, headerHighlight(headerMonth))
 	fmt.Println("Su Mo Tu We Th Fr Sa Tt")
+}
+
+func highlight(now time.Time, date time.Time) (style func(...interface{}) string) {
+	normal := color.New(color.FgWhite).Add(color.BgBlack).Add(color.Bold).SprintFunc()
+	marked := color.New(color.FgBlack).Add(color.BgGreen).Add(color.Bold).SprintFunc()
+	if date.Year() == now.Year() && date.YearDay() == now.YearDay() {
+		style = marked
+	} else {
+		style = normal
+	}
+	return style
 }
 
 func printRuns(runs []data.Run) {
@@ -66,10 +76,11 @@ func printRuns(runs []data.Run) {
 		date := time.Date(now.Year(), now.Month(), day+1, 0, 0, 0, 0, now.Location())
 		dayTotal := total(now, date, runs)
 		weekTotal = weekTotal + dayTotal
+		style := highlight(now, date)
 		if dayTotal > 0 {
-			fmt.Printf("%2d", int(dayTotal))
+			fmt.Printf(style("%2d"), int(dayTotal))
 		} else {
-			fmt.Printf("--")
+			fmt.Printf(style("--"))
 		}
 		fmt.Print(" ")
 		if date.Weekday() == time.Saturday {
