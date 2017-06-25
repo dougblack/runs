@@ -14,6 +14,7 @@ func main() {
   subcommands.Register(subcommands.CommandsCommand(), "")
   subcommands.Register(&cli.AddCommand{}, "")
   subcommands.Register(&cli.LastCommand{}, "")
+  subcommands.Register(&cli.MonthCommand{}, "")
 
   flag.Parse()
   ctx := context.Background()

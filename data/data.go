@@ -33,7 +33,7 @@ func AddRun(miles float64, date time.Time) {
     defer db.Close()
     tx := begin(db)
 
-    insert, err := tx.Prepare("insert into runs(miles, date) values(?, ?)")
+    insert, err := tx.Prepare("INSERT INTO runs(miles, date) VALUES(?, ?)")
     if err != nil {
         panic(err)
     }
@@ -49,10 +49,11 @@ func LastRun() (Run) {
     db := connect()
     defer db.Close()
 
-    rows, err := db.Query("select id, miles, date from runs order by datetime(date) desc limit 1")
+    rows, err := db.Query("SELECT id, miles, date FROM runs ORDER BY datetime(date) DESC LIMIT 1")
     if err != nil {
         panic(err)
     }
+    defer rows.Close()
     for rows.Next() {
         var id int
         var miles float64
@@ -64,4 +65,29 @@ func LastRun() (Run) {
         return Run{id, miles, date}
     }
     return Run{1, 100.0, time.Now().UTC()}
+}
+
+func LastMonth() (runs []Run) {
+    db := connect()
+    defer db.Close()
+
+    now := time.Now().UTC()
+    first := time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, now.Location())
+
+    rows, err := db.Query("SELECT id, miles, date FROM runs WHERE date >= ?", first)
+    if err != nil {
+        panic(err)
+    }
+    defer rows.Close()
+    for rows.Next() {
+        var id int
+        var miles float64
+        var date time.Time
+        err = rows.Scan(&id, &miles, &date)
+        if err != nil {
+            panic(err)
+        }
+        runs = append(runs, Run{id, miles, date})
+    }
+    return runs
 }
