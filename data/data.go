@@ -6,6 +6,12 @@ import (
     _ "github.com/mattn/go-sqlite3"
 )
 
+type Run struct {
+    Id int
+    Miles float64
+    Date time.Time
+}
+
 func connect() *sql.DB {
     db, err := sql.Open("sqlite3", "./data/runs.db")
     if err != nil {
@@ -39,7 +45,7 @@ func AddRun(miles float64, date time.Time) {
     tx.Commit()
 }
 
-func LastRun() (miles float64, date time.Time) {
+func LastRun() (Run) {
     db := connect()
     defer db.Close()
 
@@ -55,7 +61,7 @@ func LastRun() (miles float64, date time.Time) {
         if err != nil {
             panic(err)
         }
-        return miles, date
+        return Run{id, miles, date}
     }
-    return 100.0, time.Now().UTC()
+    return Run{1, 100.0, time.Now().UTC()}
 }

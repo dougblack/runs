@@ -29,7 +29,7 @@ func (l *LastCommand) Execute(_ context.Context, f *flag.FlagSet, _ ... interfac
         fmt.Printf("Received too many arguments for `last`: %s\n", f.Args())
         return subcommands.ExitUsageError
     }
-    miles, date := data.LastRun()
-    fmt.Printf("%s: %.2f miles\n", date.Format("1/2"), miles)
+    run := data.LastRun()
+    fmt.Printf("%s: %.2f miles\n", run.Date.Format("1/2"), run.Miles)
     return subcommands.ExitSuccess
 }
