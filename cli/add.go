@@ -22,11 +22,11 @@ func (*AddCommand) Usage() string {
 `
 }
 
-func (r *AddCommand) SetFlags(f *flag.FlagSet) {
-    f.BoolVar(&r.add, "add", false, "add a new run")
+func (a *AddCommand) SetFlags(f *flag.FlagSet) {
+    f.BoolVar(&a.add, "add", false, "add a new run")
 }
 
-func (r *AddCommand) Execute(_ context.Context, f *flag.FlagSet, _ ... interface{}) subcommands.ExitStatus {
+func (a *AddCommand) Execute(_ context.Context, f *flag.FlagSet, _ ... interface{}) subcommands.ExitStatus {
     if f.NArg() != 1 {
         fmt.Printf("Received too many arguments for `add`: %s\n", f.Args())
         return subcommands.ExitUsageError
