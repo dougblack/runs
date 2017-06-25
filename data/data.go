@@ -2,7 +2,10 @@ package data
 
 import (
 	"database/sql"
+	"fmt"
 	_ "github.com/mattn/go-sqlite3"
+	"path"
+	"runtime"
 	"time"
 )
 
@@ -13,7 +16,12 @@ type Run struct {
 }
 
 func connect() *sql.DB {
-	db, err := sql.Open("sqlite3", "./data/runs.db")
+	_, filename, _, ok := runtime.Caller(0)
+	if !ok {
+		panic(ok)
+	}
+	dbLoc := fmt.Sprintf("%s/runs.db", path.Dir(filename))
+	db, err := sql.Open("sqlite3", dbLoc)
 	if err != nil {
 		panic(err)
 	}

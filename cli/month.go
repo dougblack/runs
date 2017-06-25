@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"github.com/dougblack/runs/data"
 	"github.com/google/subcommands"
-	"time"
 	"strings"
+	"time"
 )
 
 type MonthCommand struct {
@@ -53,9 +53,9 @@ func printRuns(runs []data.Run) {
 	now := time.Now().Local()
 	header(now)
 
-	totalDays := time.Date(now.Year(), now.Month() + 1, 0, 0, 0, 0, 0, now.Location()).Day()
+	totalDays := time.Date(now.Year(), now.Month()+1, 0, 0, 0, 0, 0, now.Location()).Day()
 	first := time.Date(now.Year(), now.Month(), 1, 1, 0, 0, 0, now.Location())
-	last := time.Date(now.Year(), now.Month() + 1, 0, 0, 0, 0, 0, now.Location())
+	last := time.Date(now.Year(), now.Month()+1, 0, 0, 0, 0, 0, now.Location())
 
 	for i := 0; i < int(first.Weekday()); i++ {
 		print("   ")
@@ -63,7 +63,7 @@ func printRuns(runs []data.Run) {
 
 	weekTotal := 0.0
 	for day := 0; day <= totalDays; day++ {
-		date := time.Date(now.Year(), now.Month(), day + 1, 0, 0, 0, 0, now.Location())
+		date := time.Date(now.Year(), now.Month(), day+1, 0, 0, 0, 0, now.Location())
 		dayTotal := total(now, date, runs)
 		weekTotal = weekTotal + dayTotal
 		if dayTotal > 0 {
@@ -79,7 +79,7 @@ func printRuns(runs []data.Run) {
 	}
 
 	for i := int(last.Weekday()); i <= int(time.Sunday); i++ {
-		date := time.Date(now.Year(), now.Month() + 1, i, 0, 0, 0, 0, now.Location())
+		date := time.Date(now.Year(), now.Month()+1, i, 0, 0, 0, 0, now.Location())
 		fmt.Printf("--")
 		fmt.Print(" ")
 		if date.Weekday() == time.Saturday {
