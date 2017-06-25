@@ -8,6 +8,7 @@ import (
 	"github.com/google/subcommands"
 	"strconv"
 	"time"
+	"github.com/fatih/color"
 )
 
 type AddCommand struct {
@@ -45,6 +46,7 @@ func (a *AddCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{
 		}
 	}
 	data.AddRun(miles, date)
-	fmt.Printf("%s: %.2f miles\n", date.Format("1/2/2006"), miles)
+	dateColor := color.New(color.FgBlue).Add(color.Bold).SprintFunc()
+	fmt.Printf("%s: %.2f miles\n", dateColor(date.Format("1/2")), miles)
 	return subcommands.ExitSuccess
 }

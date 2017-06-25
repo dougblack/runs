@@ -43,14 +43,14 @@ func header(now time.Time) {
 	headerMonth := fmt.Sprintf("%s %d", now.Month().String(), now.Year())
 	leftPadding := (headerWidth - len(headerMonth)) / 2
 	padding := strings.Repeat(" ", leftPadding)
-	headerHighlight := color.New(color.FgBlue).Add(color.Bold).SprintFunc()
+	headerHighlight := color.New(color.FgGreen).Add(color.Bold).SprintFunc()
 	fmt.Printf("%s%s\n", padding, headerHighlight(headerMonth))
 	fmt.Println("Su Mo Tu We Th Fr Sa Tt")
 }
 
 func highlight(now time.Time, date time.Time) (style func(...interface{}) string) {
 	normal := color.New(color.FgWhite).Add(color.BgBlack).Add(color.Bold).SprintFunc()
-	marked := color.New(color.FgBlack).Add(color.BgGreen).Add(color.Bold).SprintFunc()
+	marked := color.New(color.FgBlack).Add(color.BgBlue).Add(color.Bold).SprintFunc()
 	if date.Year() == now.Year() && date.YearDay() == now.YearDay() {
 		style = marked
 	} else {
