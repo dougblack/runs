@@ -72,7 +72,7 @@ func printRuns(runs []data.Run) {
 	}
 
 	weekTotal := 0.0
-	for day := 0; day <= totalDays; day++ {
+	for day := 0; day < totalDays; day++ {
 		date := time.Date(now.Year(), now.Month(), day+1, 0, 0, 0, 0, now.Location())
 		dayTotal := total(now, date, runs)
 		weekTotal = weekTotal + dayTotal
@@ -89,12 +89,11 @@ func printRuns(runs []data.Run) {
 		}
 	}
 
-	for i := int(last.Weekday()); i <= int(time.Sunday); i++ {
-		date := time.Date(now.Year(), now.Month()+1, i, 0, 0, 0, 0, now.Location())
-		fmt.Printf("--")
-		fmt.Print(" ")
+	for i := int(last.Weekday())+1; i <= int(time.Saturday); i++ {
+		date := time.Date(now.Year(), now.Month(), totalDays+2+i, 0, 0, 0, 0, now.Location())
+		fmt.Printf("   ")
 		if date.Weekday() == time.Saturday {
-			fmt.Printf(" %3.1f\n", weekTotal)
+			fmt.Printf("%3.1f\n", weekTotal)
 		}
 	}
 }
