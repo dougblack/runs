@@ -59,21 +59,26 @@ func highlight(now time.Time, date time.Time) (style func(...interface{}) string
 	return style
 }
 
+func date(month time.Month, day int) time.Time {
+	now := time.Now().Local()
+	return time.Date(now.Year(), month, day, 0, 0, 0, 0, now.Location())
+}
+
 func printRuns(runs []data.Run) {
 	now := time.Now().Local()
 	header(now)
 
-	totalDays := time.Date(now.Year(), now.Month()+1, 0, 0, 0, 0, 0, now.Location()).Day()
-	first := time.Date(now.Year(), now.Month(), 1, 1, 0, 0, 0, now.Location())
-	last := time.Date(now.Year(), now.Month()+1, 0, 0, 0, 0, 0, now.Location())
+	first := date(now.Month(), 1)
+	last := date(now.Month()+1, 0)
+	totalDays := last.Day() + 1
 
 	for i := 0; i < int(first.Weekday()); i++ {
 		print("   ")
 	}
 
 	weekTotal := 0.0
-	for day := 0; day < totalDays; day++ {
-		date := time.Date(now.Year(), now.Month(), day+1, 0, 0, 0, 0, now.Location())
+	for day := 1; day < totalDays; day++ {
+		date := date(now.Month(), day)
 		dayTotal := total(now, date, runs)
 		weekTotal = weekTotal + dayTotal
 		style := highlight(now, date)
@@ -89,8 +94,9 @@ func printRuns(runs []data.Run) {
 		}
 	}
 
-	for i := int(last.Weekday())+1; i <= int(time.Saturday); i++ {
-		date := time.Date(now.Year(), now.Month(), totalDays+2+i, 0, 0, 0, 0, now.Location())
+	remainder := time.Saturday - last.Weekday()
+	for i := 1; i <= int(remainder); i++ {
+		date := date(now.Month(), last.Day()+i)
 		fmt.Printf("   ")
 		if date.Weekday() == time.Saturday {
 			fmt.Printf("%3.1f\n", weekTotal)

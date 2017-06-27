@@ -5,10 +5,10 @@ import (
 	"flag"
 	"fmt"
 	"github.com/dougblack/runs/data"
+	"github.com/fatih/color"
 	"github.com/google/subcommands"
 	"strconv"
 	"time"
-	"github.com/fatih/color"
 )
 
 type AddCommand struct {
